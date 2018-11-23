@@ -4,19 +4,20 @@ require_relative './save_pics'
 require_relative './save_video'
 class SaveBrand
 
-  attr_reader :url
+  attr_reader :url, :type
 
-  def initialize(url)
+  def initialize(url, type='')
     @url = url
+    @type = type
   end
 
   def save_pics
     create_dir
     ids = get_ids
     ids.each do |id|
- #     SavePics.new(id, dir_name).save
-      SaveVideo.new(id, dir_name).save
+      SavePics.new(id, dir_name).save
     end
+    Dir.chdir('..')
   end
 
   def get_ids
@@ -38,7 +39,11 @@ class SaveBrand
   end
 
   def dir_name
-    url.split('/').last.split('?').first
+    if type == 'brand'
+      url.split('/')[4]
+    else
+      url.split('/').last.split('?').first
+    end
   end
 
   def query_string

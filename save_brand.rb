@@ -28,7 +28,7 @@ class SaveBrand
       doc = Nokogiri::HTML(html)
       elements = doc.css('.dtList')
       elements.each do |el|
-        ids_string = el.attribute('data-colors').value # можно ли выдрать id без перебора
+        ids_string = el.attribute('data-catalogercod1s').value # можно ли выдрать id без перебора
         ids_array = ids_string.split(',')
         ids += ids_array unless ids.include?(ids_array)
       end

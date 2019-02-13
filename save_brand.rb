@@ -36,6 +36,10 @@ class SaveBrand
     ids
     rescue OpenURI::HTTPError
       ids
+    rescue OpenSSL::SSL::SSLError
+      ids
+    rescue Net::OpenTimeout
+      ids
   end
 
   def dir_name

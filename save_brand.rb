@@ -4,17 +4,19 @@ require_relative './save_pics'
 require_relative './save_video'
 class SaveBrand
 
-  attr_reader :url, :type
+  attr_reader :url, :type, :items
 
   def initialize(url, type='')
     @url = url
     @type = type
+    @items = File.open("/home/muxa/Git/parse_wb/files/saved_items").to_a
   end
 
   def save_pics
     create_dir
     ids = get_ids
     ids.each do |id|
+      next if check_saved(id)
       SavePics.new(id, dir_name).save
     end
     Dir.chdir('..')
@@ -34,11 +36,7 @@ class SaveBrand
       end
     end
     ids
-    rescue OpenURI::HTTPError
-      ids
-    rescue OpenSSL::SSL::SSLError
-      ids
-    rescue Net::OpenTimeout
+    rescue OpenURI::HTTPError, OpenSSL::SSL::SSLError, Net::OpenTimeout
       ids
   end
 
@@ -62,5 +60,9 @@ class SaveBrand
     Dir.mkdir('files') unless File.exists?('files')
     Dir.chdir('files')
     Dir.mkdir(dir_name) unless File.exists?(dir_name)
+  end
+
+  def check_saved(id)
+    items.include?(id + "\n")
   end
 end
